@@ -31,6 +31,20 @@ export default function Page() {
     setCode(newArray)
   }
 
+  const compareCodes = () => {
+    const codeStr: string = code.join("")
+    const guessStr: string = guess.join("")
+    const areEqual: boolean = guessStr === codeStr
+
+    if (guess.length === 4 && areEqual) {
+      console.log("You won! 🎉")
+    }
+
+    if (guess.length === 4 && !areEqual) {
+      console.log("You lost! 😡")
+    }
+  }
+
   const handleOnDrag = (e: React.DragEvent<HTMLDivElement>, id: number) => {
     e.dataTransfer?.setData("id", String(id))
   }
@@ -59,22 +73,6 @@ export default function Page() {
     generateRandomCode()
   }, [])
 
-  useEffect(() => {
-    const codeStr: string = code.join("")
-    const guessStr: string = guess.join("")
-    const areEqual: boolean = guessStr === codeStr
-
-    console.log(guess)
-
-    if (guess.length === 4 && areEqual) {
-      console.log("You won! 🎉")
-    }
-
-    if (guess.length === 4 && !areEqual) {
-      console.log("You lost! 😡")
-    }
-  }, [guess])
-
   return (
     <div className="flex justify-center h-screen pt-4">
       {code}
@@ -92,7 +90,7 @@ export default function Page() {
           {Array(12)
             .fill(null)
             .map((_, i) => (
-              <div key={i} className="flex justify-between items-center gap-8">
+              <div key={i} className="flex justify-between gap-8">
                 <span className="text-muted-foreground select-none">
                   {i + 1}.
                 </span>
@@ -114,12 +112,22 @@ export default function Page() {
                     onDragOver={(e) => handleDragOver(e, i)}
                   ></div>
                 </div>
-                <div className="flex gap-2 *:rounded-full *:border-[3px] *:h-4 *:w-4">
-                  <div className="bg-green-500 "></div>
-                  <div className="bg-green-500"></div>
-                  <div className="bg-yellow-500"></div>
-                  <div></div>
-                </div>
+                {i === currentRow ? (
+                  <Button
+                    className="rounded-3xl"
+                    variant="outline"
+                    onClick={compareCodes}
+                  >
+                    Check
+                  </Button>
+                ) : (
+                  <div className="flex gap-2 *:rounded-full *:border-[3px] *:h-4 *:w-4">
+                    <div className="bg-green-500 "></div>
+                    <div className="bg-green-500"></div>
+                    <div className="bg-yellow-500"></div>
+                    <div></div>
+                  </div>
+                )}
               </div>
             ))}
         </div>

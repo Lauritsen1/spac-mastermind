@@ -8,25 +8,76 @@ import { Button } from "@/components/ui/button"
 
 import { RotateCcw } from "lucide-react"
 
+const PEGS = [
+  "bg-red-500",
+  "bg-yellow-500",
+  "bg-green-500",
+  "bg-blue-500",
+  "bg-orange-500",
+  "bg-purple-500",
+]
+
 export default function Page() {
-  const [code, setCode] = useState<string[]>([])
+  const [code, setCode] = useState<number[]>([])
+  const [guess, setGuess] = useState<number[]>([])
+  const [currentRow, setCurrentRow] = useState<number>(0)
 
   const generateRandomCode = () => {
-    const PEGS: string[] = ["red", "yellow", "green", "blue", "white", "black"]
-    const newArray: string[] = []
+    const newArray: number[] = []
     for (let i = 0; i < 4; i++) {
       const randomNumber = Math.floor(Math.random() * PEGS.length)
-      newArray.push(PEGS[randomNumber])
+      newArray.push(randomNumber)
     }
     setCode(newArray)
+  }
+
+  const handleOnDrag = (e: React.DragEvent<HTMLDivElement>, id: number) => {
+    e.dataTransfer?.setData("id", String(id))
+  }
+
+  const handleOnDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    rowIndex: number
+  ) => {
+    if (rowIndex !== currentRow) return
+
+    const id: number = Number(e.dataTransfer?.getData("id"))
+    setGuess((prev) => [...prev, id])
+
+    e.currentTarget.classList.add(PEGS[id])
+  }
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    rowIndex: number
+  ) => {
+    if (rowIndex !== currentRow) return
+    e.preventDefault()
   }
 
   useEffect(() => {
     generateRandomCode()
   }, [])
 
+  useEffect(() => {
+    const codeStr: string = code.join("")
+    const guessStr: string = guess.join("")
+    const areEqual: boolean = guessStr === codeStr
+
+    console.log(guess)
+
+    if (guess.length === 4 && areEqual) {
+      console.log("You won! 🎉")
+    }
+
+    if (guess.length === 4 && !areEqual) {
+      console.log("You lost! 😡")
+    }
+  }, [guess])
+
   return (
     <div className="flex justify-center h-screen pt-4">
+      {code}
       <div>
         <div className="flex justify-between items-center border-b mb-4 pb-4">
           <h2 className="font-bold text-3xl">Mastermind</h2>
@@ -46,10 +97,22 @@ export default function Page() {
                   {i + 1}.
                 </span>
                 <div className="flex gap-4 *:rounded-full *:border-4 *:h-10 *:w-10">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
+                  <div
+                    onDrop={(e) => handleOnDrop(e, i)}
+                    onDragOver={(e) => handleDragOver(e, i)}
+                  ></div>
+                  <div
+                    onDrop={(e) => handleOnDrop(e, i)}
+                    onDragOver={(e) => handleDragOver(e, i)}
+                  ></div>
+                  <div
+                    onDrop={(e) => handleOnDrop(e, i)}
+                    onDragOver={(e) => handleDragOver(e, i)}
+                  ></div>
+                  <div
+                    onDrop={(e) => handleOnDrop(e, i)}
+                    onDragOver={(e) => handleDragOver(e, i)}
+                  ></div>
                 </div>
                 <div className="flex gap-2 *:rounded-full *:border-[3px] *:h-4 *:w-4">
                   <div className="bg-green-500 "></div>
@@ -61,12 +124,17 @@ export default function Page() {
             ))}
         </div>
         <div className="flex justify-center gap-4 mt-4 pt-4 border-t *:rounded-full *:border-4 *:h-10 *:w-10">
-          <div className="bg-red-500"></div>
-          <div className="bg-yellow-500"></div>
-          <div className="bg-green-500"></div>
-          <div className="bg-blue-500"></div>
-          <div className="bg-orange-500"></div>
-          <div className="bg-purple-500"></div>
+          {PEGS.map((color, i) => (
+            <div key={i}>
+              <div
+                className={`${color} h-full w-full rounded-full cursor-pointer grid place-items-center text-black`}
+                draggable
+                onDragStart={(e) => handleOnDrag(e, i)}
+              >
+                {i}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

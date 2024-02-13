@@ -38,10 +38,12 @@ export default function Page() {
 
     if (guess.length === 4 && areEqual) {
       console.log("You won! 🎉")
+      return
     }
 
     if (guess.length === 4 && !areEqual) {
       console.log("You lost! 😡")
+      return
     }
   }
 
@@ -75,7 +77,6 @@ export default function Page() {
 
   return (
     <div className="flex justify-center h-screen pt-4">
-      {code}
       <div>
         <div className="flex justify-between items-center border-b mb-4 pb-4">
           <h2 className="font-bold text-3xl">Mastermind</h2>
@@ -89,30 +90,27 @@ export default function Page() {
         <div className="flex flex-col-reverse gap-4 max-w-max">
           {Array(12)
             .fill(null)
-            .map((_, i) => (
-              <div key={i} className="flex justify-between gap-8">
+            .map((_, rowIndex) => (
+              <div
+                key={rowIndex}
+                className="flex justify-between items-center gap-8"
+              >
                 <span className="text-muted-foreground select-none">
-                  {i + 1}.
+                  {rowIndex + 1}.
                 </span>
-                <div className="flex gap-4 *:rounded-full *:border-4 *:h-10 *:w-10">
-                  <div
-                    onDrop={(e) => handleOnDrop(e, i)}
-                    onDragOver={(e) => handleDragOver(e, i)}
-                  ></div>
-                  <div
-                    onDrop={(e) => handleOnDrop(e, i)}
-                    onDragOver={(e) => handleDragOver(e, i)}
-                  ></div>
-                  <div
-                    onDrop={(e) => handleOnDrop(e, i)}
-                    onDragOver={(e) => handleDragOver(e, i)}
-                  ></div>
-                  <div
-                    onDrop={(e) => handleOnDrop(e, i)}
-                    onDragOver={(e) => handleDragOver(e, i)}
-                  ></div>
+                <div className="flex gap-4">
+                  {code.map((digit, columnIndex) => (
+                    <div
+                      key={columnIndex}
+                      className="rounded-full border-4 h-10 w-10 grid place-items-center"
+                      onDrop={(e) => handleOnDrop(e, rowIndex)}
+                      onDragOver={(e) => handleDragOver(e, rowIndex)}
+                    >
+                      {digit}
+                    </div>
+                  ))}
                 </div>
-                {i === currentRow ? (
+                {rowIndex === currentRow ? (
                   <Button
                     className="rounded-3xl"
                     variant="outline"
@@ -131,9 +129,9 @@ export default function Page() {
               </div>
             ))}
         </div>
-        <div className="flex justify-center gap-4 mt-4 pt-4 border-t *:rounded-full *:border-4 *:h-10 *:w-10">
+        <div className="flex justify-center gap-4 mt-4 pt-4 border-t">
           {PEGS.map((color, i) => (
-            <div key={i}>
+            <div key={i} className="rounded-full border-4 h-10 w-10">
               <div
                 className={`${color} h-full w-full rounded-full cursor-pointer grid place-items-center text-black`}
                 draggable

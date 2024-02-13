@@ -42,7 +42,9 @@ export default function Page() {
             .fill(null)
             .map((_, i) => (
               <div key={i} className="flex justify-between items-center gap-8">
-                <span className="text-muted-foreground">{i + 1}.</span>
+                <span className="text-muted-foreground select-none">
+                  {i + 1}.
+                </span>
                 <div className="flex gap-4 *:rounded-full *:border-4 *:h-10 *:w-10">
                   <div></div>
                   <div></div>

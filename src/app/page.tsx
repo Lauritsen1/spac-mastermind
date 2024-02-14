@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useState } from "react"
 
 import { Header } from "@/components/header"
 import { Row } from "@/components/row"
@@ -11,7 +11,10 @@ import { useGameStore } from "@/stores/game-store"
 export default function Page() {
   const code = useGameStore((state) => state.code)
   const guess = useGameStore((state) => state.guess)
+  const clearGuess = useGameStore((state) => state.clearGuess)
+  const currentRow = useGameStore((state) => state.currentRow)
   const nextRow = useGameStore((state) => state.nextRow)
+  const [rows, setRows] = useState(Array(12).fill([0, 0, 0, 0]))
 
   const compareCodes = () => {
     const codeStr: string = code.join("")
@@ -24,6 +27,35 @@ export default function Page() {
 
     if (guess.length === 4 && !areEqual) {
       console.log("Wrong! 😡")
+
+      const clues: number[] = []
+      let codeCopy: (number | null)[] = [...code]
+      let guessCopy: (number | null)[] = [...guess]
+
+      for (let i = 0; i < code.length; i++) {
+        if (code[i] === guess[i]) {
+          clues.push(2)
+          codeCopy[i] = guessCopy[i] = null
+        }
+      }
+
+      for (let i = 0; i < guessCopy.length; i++) {
+        if (guessCopy[i] !== null && codeCopy.includes(guessCopy[i])) {
+          clues.push(1)
+          codeCopy[codeCopy.indexOf(guessCopy[i])] = null
+        }
+      }
+
+      for (let i = clues.length; i < code.length; i++) {
+        clues.push(0)
+      }
+
+      setRows((prev) => {
+        prev[currentRow] = clues
+        return [...prev]
+      })
+
+      clearGuess()
       nextRow()
     }
   }
@@ -33,15 +65,14 @@ export default function Page() {
       <div>
         <Header />
         <div className="flex flex-col-reverse gap-4 max-w-max">
-          {Array(12)
-            .fill(null)
-            .map((_, rowIndex) => (
-              <Row
-                key={rowIndex}
-                rowIndex={rowIndex}
-                compareCodes={compareCodes}
-              />
-            ))}
+          {rows.map((_, rowIndex) => (
+            <Row
+              key={rowIndex}
+              rowIndex={rowIndex}
+              compareCodes={compareCodes}
+              row={rows[rowIndex]}
+            />
+          ))}
         </div>
         <ColorPicker />
       </div>

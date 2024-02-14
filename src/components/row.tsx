@@ -1,5 +1,3 @@
-import React from "react"
-
 import { Clues } from "@/components/clues"
 
 import { Button } from "@/components/ui/button"
@@ -11,9 +9,10 @@ import { useGameStore } from "@/stores/game-store"
 interface RowProps {
   rowIndex: number
   compareCodes: () => void
+  row: number[]
 }
 
-export function Row({ rowIndex, compareCodes }: RowProps) {
+export function Row({ rowIndex, compareCodes, row }: RowProps) {
   const code = useGameStore((state) => state.code)
   const currentRow = useGameStore((state) => state.currentRow)
   const { handleOnDrop, handleDragOver } = useDragAndDrop()
@@ -46,7 +45,7 @@ export function Row({ rowIndex, compareCodes }: RowProps) {
           </Button>
         </div>
       ) : (
-        <Clues />
+        <Clues row={row} />
       )}
     </div>
   )

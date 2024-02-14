@@ -8,6 +8,7 @@ interface GameStore {
   currentRow: number
   generateNewCode: () => void
   setGuess: (id: number) => void
+  clearGuess: () => void
   nextRow: () => void
 }
 
@@ -17,6 +18,7 @@ const useGameStore = create<GameStore>((set) => ({
   currentRow: 0,
   generateNewCode: async () => set({ code: await generateCode() }),
   setGuess: (id) => set((state) => ({ guess: [...state.guess, id] })),
+  clearGuess: () => set({ guess: [] }),
   nextRow: () => set((state) => ({ currentRow: state.currentRow + 1 })),
 }))
 

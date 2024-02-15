@@ -1,13 +1,11 @@
 import { useGameStore } from "@/stores/game-store"
 
-import { PEGS } from "@/lib/constants"
-
 export function useDragAndDrop() {
   const currentRow = useGameStore((state) => state.currentRow)
   const setGuess = useGameStore((state) => state.setGuess)
 
-  const handleOnDrag = (event: React.DragEvent<HTMLDivElement>, id: number) => {
-    event.dataTransfer?.setData("id", String(id))
+  const handleOnDrag = (event: React.DragEvent<HTMLDivElement>, color: any) => {
+    event.dataTransfer?.setData("color", JSON.stringify(color))
   }
 
   const handleOnDrop = (
@@ -16,10 +14,13 @@ export function useDragAndDrop() {
   ) => {
     if (rowIndex !== currentRow) return
 
-    const id = Number(event.dataTransfer?.getData("id"))
-    setGuess(id)
-
-    event.currentTarget.classList.add(PEGS[id])
+    try {
+      const color = JSON.parse(event.dataTransfer?.getData("color") || "{}")
+      setGuess(color.id)
+      event.currentTarget.classList.add(color.class)
+    } catch (error) {
+      console.error("Error parsing color data:", error)
+    }
   }
 
   const handleDragOver = (

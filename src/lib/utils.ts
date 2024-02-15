@@ -13,3 +13,12 @@ export async function generateCode() {
   }
   return code
 }
+
+// function generateCode() {
+//   const code = []
+//   for (let i = 0; i < 4; i++) {
+//     let randomIndex = Math.floor(Math.random() * COLORS.length)
+//     code.push(COLORS[randomIndex])
+//   }
+//   return code
+// }

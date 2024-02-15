@@ -1,10 +1,12 @@
-import { Clues } from "@/components/game/clues"
+import { Hints } from "@/components/game/hints"
 
 import { Button } from "@/components/ui/button"
 
 import { useDragAndDrop } from "@/hooks/use-drag-and-drop"
 
 import { useGameStore } from "@/stores/game-store"
+
+import { COLORS } from "@/lib/constants"
 
 interface RowProps {
   rowIndex: number
@@ -18,21 +20,26 @@ export function Row({ rowIndex, compareCodes, row }: RowProps) {
   const { handleOnDrop, handleDragOver } = useDragAndDrop()
 
   return (
-    <div key={rowIndex} className="flex justify-between items-center gap-8">
+    <div className="flex justify-between items-center gap-8">
       <span className="text-muted-foreground select-none grow">
         {rowIndex + 1}.
       </span>
       <div className="flex gap-4">
-        {code.map((digit, columnIndex) => (
-          <div
-            key={columnIndex}
-            className="rounded-full border-4 h-10 w-10 grid place-items-center"
-            onDrop={(e) => handleOnDrop(e, rowIndex)}
-            onDragOver={(e) => handleDragOver(e, rowIndex)}
-          >
-            {digit}
-          </div>
-        ))}
+        {code.map((color, slotIndex) => {
+          const colorObject = COLORS.find((c) => c.id === color)
+          return (
+            <div
+              key={slotIndex}
+              className="rounded-full border-4 h-10 w-10 grid place-items-center"
+              onDrop={(e) => handleOnDrop(e, rowIndex)}
+              onDragOver={(e) => handleDragOver(e, rowIndex)}
+            >
+              <span
+                className={`${colorObject?.class} h-2 w-2 rounded-full`}
+              ></span>
+            </div>
+          )
+        })}
       </div>
       {rowIndex === currentRow ? (
         <div className="flex justify-center grow">
@@ -45,7 +52,7 @@ export function Row({ rowIndex, compareCodes, row }: RowProps) {
           </Button>
         </div>
       ) : (
-        <Clues row={row} />
+        <Hints row={row} />
       )}
     </div>
   )

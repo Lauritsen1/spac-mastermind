@@ -1,23 +1,24 @@
-import { Hints } from "@/components/game/hints"
-
-import { Button } from "@/components/ui/button"
-
-import { useDragAndDrop } from "@/hooks/use-drag-and-drop"
-
 import { useGameStore } from "@/stores/game-store"
 
-import { COLORS } from "@/lib/constants"
+import { Slot } from "@/components/game/slot"
+import { CheckButton } from "@/components/game/check-button"
+import { Hint } from "@/components/game/hint"
 
-interface RowProps {
-  rowIndex: number
-  compareCodes: () => void
-  row: number[]
-}
-
-export function Row({ rowIndex, compareCodes, row }: RowProps) {
-  const code = useGameStore((state) => state.code)
+export function Row({ rowIndex }: { rowIndex: number }) {
   const currentRow = useGameStore((state) => state.currentRow)
-  const { handleOnDrop, handleDragOver } = useDragAndDrop()
+  const hints = useGameStore((state) => state.hints)
+
+  const Hints = () => {
+    return Array.from({ length: 4 }).map((_, i) => (
+      <Hint key={i} hint={hints[rowIndex][i]} />
+    ))
+  }
+
+  const Slots = () => {
+    return Array.from({ length: 4 }).map((_, i) => (
+      <Slot key={i} rowIndex={rowIndex} />
+    ))
+  }
 
   return (
     <div className="flex justify-between items-center gap-8">
@@ -25,34 +26,16 @@ export function Row({ rowIndex, compareCodes, row }: RowProps) {
         {rowIndex + 1}.
       </span>
       <div className="flex gap-4">
-        {code.map((color, slotIndex) => {
-          const colorObject = COLORS.find((c) => c.id === color)
-          return (
-            <div
-              key={slotIndex}
-              className="rounded-full border-4 h-10 w-10 grid place-items-center"
-              onDrop={(e) => handleOnDrop(e, rowIndex)}
-              onDragOver={(e) => handleDragOver(e, rowIndex)}
-            >
-              <span
-                className={`${colorObject?.class} h-2 w-2 rounded-full`}
-              ></span>
-            </div>
-          )
-        })}
+        <Slots />
       </div>
       {rowIndex === currentRow ? (
         <div className="flex justify-center grow">
-          <Button
-            className="rounded-3xl"
-            variant="outline"
-            onClick={compareCodes}
-          >
-            Check
-          </Button>
+          <CheckButton />
         </div>
       ) : (
-        <Hints row={row} />
+        <div className="flex gap-2">
+          <Hints />
+        </div>
       )}
     </div>
   )

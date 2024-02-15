@@ -1,4 +1,4 @@
-import { Clues } from "@/components/clues"
+import { Clues } from "@/components/game/clues"
 
 import { Button } from "@/components/ui/button"
 

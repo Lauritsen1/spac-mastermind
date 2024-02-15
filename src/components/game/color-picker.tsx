@@ -1,5 +1,6 @@
-import { useDragAndDrop } from "@/hooks/use-drag-and-drop"
 import { COLORS } from "@/lib/constants"
+
+import { useDragAndDrop } from "@/hooks/use-drag-and-drop"
 
 export function ColorPicker() {
   const { handleOnDrag } = useDragAndDrop()

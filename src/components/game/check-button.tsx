@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-
 import { useGameStore } from "@/stores/game-store"
+
+import { Button } from "@/components/ui/button"
 
 export function CheckButton() {
   const code = useGameStore((state) => state.code)

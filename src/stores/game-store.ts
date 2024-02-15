@@ -1,6 +1,7 @@
 import { create } from "zustand"
 
 import { COLORS } from "@/lib/constants"
+import { generateCode } from "@/lib/utils"
 
 interface GameStore {
   code: string[]
@@ -18,18 +19,9 @@ interface GameStore {
   nextRow: () => void
 }
 
-function generateCode() {
-  const code = []
-  for (let i = 0; i < 4; i++) {
-    let randomIndex = Math.floor(Math.random() * COLORS.length)
-    code.push(COLORS[randomIndex].id)
-  }
-  return code
-}
-
 const useGameStore = create<GameStore>((set) => ({
   code: [],
-  generateCode: () => set({ code: generateCode() }),
+  generateCode: () => set({ code: generateCode(COLORS) }),
 
   guess: [],
   setGuess: (id) => set((state) => ({ guess: [...state.guess, id] })),

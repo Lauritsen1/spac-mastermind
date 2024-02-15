@@ -1,8 +1,7 @@
-import { ThemeToggle } from "@/components/theme-toggle"
-
-import { Button } from "@/components/ui/button"
-
 import { RotateCcw } from "lucide-react"
+
+import { ThemeToggle } from "@/components/theme-toggle"
+import { Button } from "@/components/ui/button"
 
 export function Header() {
   return (

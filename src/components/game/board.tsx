@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
+
+import { useGameStore } from "@/stores/game-store"
 
 import { Header } from "@/components/game/board-header"
 import { Row } from "@/components/game/row"
 import { ColorPicker } from "@/components/game/color-picker"
-
-import { useGameStore } from "@/stores/game-store"
 
 export function Board() {
   const generateCode = useGameStore((state) => state.generateCode)

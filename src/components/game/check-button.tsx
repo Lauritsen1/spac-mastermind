@@ -4,13 +4,9 @@ import { Button } from "@/components/ui/button"
 
 export function CheckButton() {
   const code = useGameStore((state) => state.code)
-
-  const guess = useGameStore((state) => state.guess)
-  const clearGuess = useGameStore((state) => state.clearGuess)
-
+  const rows = useGameStore((state) => state.rows)
   const currentRow = useGameStore((state) => state.currentRow)
   const nextRow = useGameStore((state) => state.nextRow)
-
   const setHints = useGameStore((state) => state.setHints)
 
   const getHints = (code: string[], guess: string[]) => {
@@ -41,7 +37,9 @@ export function CheckButton() {
   }
 
   const handleClick = () => {
+    const guess = rows[currentRow]
     const hints = getHints(code, guess)
+    console.log(guess)
 
     if (checkWin(hints)) {
       console.log("You won!")
@@ -50,7 +48,6 @@ export function CheckButton() {
     }
 
     setHints(hints)
-    clearGuess()
     nextRow()
   }
 

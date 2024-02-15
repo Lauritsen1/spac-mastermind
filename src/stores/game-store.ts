@@ -7,25 +7,18 @@ interface GameStore {
   code: string[]
   generateCode: () => void
 
-  guess: string[]
-
-  setGuess: (id: string) => void
-  clearGuess: () => void
-
   hints: number[][]
   setHints: (newHints: number[]) => void
 
+  rows: string[][]
   currentRow: number
+  updateRow: (colorId: string, slotIndex: number) => void
   nextRow: () => void
 }
 
 const useGameStore = create<GameStore>((set) => ({
   code: [],
   generateCode: () => set({ code: generateCode(COLORS) }),
-
-  guess: [],
-  setGuess: (id) => set((state) => ({ guess: [...state.guess, id] })),
-  clearGuess: () => set({ guess: [] }),
 
   hints: new Array(12).fill([]),
   setHints: (newHints) =>
@@ -35,7 +28,18 @@ const useGameStore = create<GameStore>((set) => ({
       ),
     })),
 
+  rows: new Array(12).fill(new Array(4).fill("")),
   currentRow: 0,
+  updateRow: (colorId: string, slotIndex: number) =>
+    set((state) => {
+      const newRows = [...state.rows]
+      newRows[state.currentRow] = [
+        ...newRows[state.currentRow].slice(0, slotIndex),
+        colorId,
+        ...newRows[state.currentRow].slice(slotIndex + 1),
+      ]
+      return { rows: newRows }
+    }),
   nextRow: () => set((state) => ({ currentRow: state.currentRow + 1 })),
 }))
 

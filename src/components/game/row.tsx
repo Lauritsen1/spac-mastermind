@@ -16,7 +16,7 @@ export function Row({ rowIndex }: { rowIndex: number }) {
 
   const Slots = () => {
     return Array.from({ length: 4 }).map((_, i) => (
-      <Slot key={i} rowIndex={rowIndex} />
+      <Slot key={i} rowIndex={rowIndex} slotIndex={i} />
     ))
   }
 

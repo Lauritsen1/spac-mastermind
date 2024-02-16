@@ -3,13 +3,18 @@ import { create } from "zustand"
 import { COLORS } from "@/lib/constants"
 import { generateCode } from "@/lib/game-logic"
 
+type gameStatus = "won" | "lost" | "active"
+
 interface GameStore {
-  gameStatus: "won" | "lost" | ""
+  currentGuess: string[]
+  isGameDone: boolean
+  gameStatus: gameStatus
   currentRow: number
   code: string[]
   rows: string[][]
   hints: number[][]
-  updateGameStatus: (status: "won" | "lost") => void
+  updateIsGameDone: (isGameDone: boolean) => void
+  updateGameStatus: (status: gameStatus) => void
   nextRow: () => void
   generateCode: () => void
   updateRow: (colorId: string, slotIndex: number) => void
@@ -18,7 +23,9 @@ interface GameStore {
 }
 
 const initialState = {
-  gameStatus: "" as "won" | "lost" | "",
+  currentGuess: [],
+  isGameDone: false,
+  gameStatus: "active" as gameStatus,
   currentRow: 0,
   code: [],
   rows: Array.from({ length: 12 }, () => new Array(4).fill("")),
@@ -27,6 +34,12 @@ const initialState = {
 
 const useGameStore = create<GameStore>((set) => ({
   ...initialState,
+  updateCurrentGuess: (colorId: string, slotIndex: number) =>
+    set((state) => {
+      state.currentGuess[slotIndex] = colorId
+      return { currentGuess: state.currentGuess }
+    }),
+  updateIsGameDone: (isGameDone) => set({ isGameDone }),
   updateGameStatus: (status) => set({ gameStatus: status }),
   nextRow: () => set((state) => ({ currentRow: state.currentRow + 1 })),
   generateCode: () => set({ code: generateCode(COLORS) }),
@@ -43,7 +56,8 @@ const useGameStore = create<GameStore>((set) => ({
   initializeGame: async () => {
     const newCode = await generateCode(COLORS)
     set({
-      gameStatus: "" as "won" | "lost" | "",
+      isGameDone: false,
+      gameStatus: "active" as gameStatus,
       currentRow: 0,
       code: newCode,
       rows: Array.from({ length: 12 }, () => new Array(4).fill("")),

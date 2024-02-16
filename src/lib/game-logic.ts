@@ -30,6 +30,6 @@ export function getHints(code: string[], guess: string[]) {
   return new Array(4).fill(0).map((_, i) => hints[i] || 0)
 }
 
-export function checkGameStatus(hints: number[]) {
+export const checkWin = (hints: number[]) => {
   return hints.every((hint) => hint === 2)
 }

@@ -4,33 +4,52 @@ import { COLORS } from "@/lib/constants"
 import { generateCode } from "@/lib/game-logic"
 
 interface GameStore {
-  code: string[]
-  hints: number[][]
-  rows: string[][]
+  gameStatus: "won" | "lost" | ""
   currentRow: number
-  generateCode: () => void
-  setHints: (newHints: number[]) => void
-  updateRow: (colorId: string, slotIndex: number) => void
+  code: string[]
+  rows: string[][]
+  hints: number[][]
+  updateGameStatus: (status: "won" | "lost") => void
   nextRow: () => void
+  generateCode: () => void
+  updateRow: (colorId: string, slotIndex: number) => void
+  setHints: (newHints: number[]) => void
+  initializeGame: () => void
+}
+
+const initialState = {
+  gameStatus: "" as "won" | "lost" | "",
+  currentRow: 0,
+  code: [],
+  rows: Array.from({ length: 12 }, () => new Array(4).fill("")),
+  hints: Array.from({ length: 12 }, () => new Array(4).fill(0)),
 }
 
 const useGameStore = create<GameStore>((set) => ({
-  code: [],
-  hints: Array.from({ length: 12 }, () => new Array(4).fill(0)),
-  rows: Array.from({ length: 12 }, () => new Array(4).fill("")),
-  currentRow: 0,
+  ...initialState,
+  updateGameStatus: (status) => set({ gameStatus: status }),
+  nextRow: () => set((state) => ({ currentRow: state.currentRow + 1 })),
   generateCode: () => set({ code: generateCode(COLORS) }),
-  setHints: (hints: number[]) =>
-    set((state) => {
-      state.hints[state.currentRow] = hints
-      return state
-    }),
   updateRow: (colorId: string, slotIndex: number) =>
     set((state) => {
       state.rows[state.currentRow][slotIndex] = colorId
       return { rows: state.rows }
     }),
-  nextRow: () => set((state) => ({ currentRow: state.currentRow + 1 })),
+  setHints: (hints: number[]) =>
+    set((state) => {
+      state.hints[state.currentRow] = hints
+      return state
+    }),
+  initializeGame: async () => {
+    const newCode = await generateCode(COLORS)
+    set({
+      gameStatus: "" as "won" | "lost" | "",
+      currentRow: 0,
+      code: newCode,
+      rows: Array.from({ length: 12 }, () => new Array(4).fill("")),
+      hints: Array.from({ length: 12 }, () => new Array(4).fill(0)),
+    })
+  },
 }))
 
 export { useGameStore }

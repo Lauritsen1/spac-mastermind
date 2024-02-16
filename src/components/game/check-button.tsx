@@ -22,6 +22,8 @@ export function CheckButton() {
   const code = useGameStore((state) => state.code)
   const rows = useGameStore((state) => state.rows)
   const currentRow = useGameStore((state) => state.currentRow)
+  const gameStatus = useGameStore((state) => state.gameStatus)
+  const updateGameStatus = useGameStore((state) => state.updateGameStatus)
   const nextRow = useGameStore((state) => state.nextRow)
   const setHints = useGameStore((state) => state.setHints)
 

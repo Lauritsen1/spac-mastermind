@@ -10,11 +10,9 @@ import { ColorPicker } from "@/components/game/color-picker"
 
 export function Board() {
   const code = useGameStore((state) => state.code)
-  const rows = useGameStore((state) => state.rows)
   const generateCode = useGameStore((state) => state.generateCode)
-
   const Rows = () => {
-    return rows.map((_, i) => <Row key={i} rowIndex={i} />)
+    return Array.from({ length: 12 }, (_, i) => <Row key={i} rowIndex={i} />)
   }
 
   useEffect(() => {
@@ -23,13 +21,13 @@ export function Board() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      {code.map((color, index) => (
+      {/* {code.map((color, index) => (
         <div
           key={index}
           className="h-12 w-12 rounded-full border border-gray-200"
           style={{ backgroundColor: color }}
         />
-      ))}
+      ))} */}
       <div>
         <Header />
         <div className="flex flex-col-reverse gap-4 max-w-max">

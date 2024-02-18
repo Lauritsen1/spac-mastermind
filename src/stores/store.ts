@@ -12,10 +12,12 @@ interface Store {
   code: string[]
   rows: string[][]
   hints: number[][]
+  showCode: boolean
   updateRow: (color: string, slot: number) => void
   nextRow: () => void
   updateHints: () => void
   checkGameState: () => void
+  setShowCode: (showCode: boolean) => void
   newGame: () => void
 }
 
@@ -29,6 +31,7 @@ const setInitialState = () => ({
     .map(() => Array(CODE_LENGTH).fill(0)),
   gameState: GameState.Ongoing,
   currentRow: 0,
+  showCode: false,
 })
 
 const useStore = create<Store>((set) => ({
@@ -69,6 +72,8 @@ const useStore = create<Store>((set) => ({
 
       return { gameState: GameState.Ongoing }
     }),
+
+  setShowCode: (showCode) => set((state) => ({ showCode: showCode })),
 
   newGame: () => set(setInitialState),
 }))

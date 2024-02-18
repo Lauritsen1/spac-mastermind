@@ -87,8 +87,8 @@ function generateCode<T>(arr: T[], len: number): T[] {
   return code
 }
 
-function generateHints(code: string[], attempt: string[]): number[] {
-  const hints = attempt.map((color, index) => {
+function generateHints(code: string[], row: string[]): number[] {
+  const hints = row.map((color, index) => {
     if (color === code[index]) return 2
     if (code.includes(color)) return 1
     return 0

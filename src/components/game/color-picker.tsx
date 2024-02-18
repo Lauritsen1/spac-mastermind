@@ -1,18 +1,16 @@
-import { COLORS } from "@/lib/constants"
+"use client"
 
-import { useDragAndDrop } from "@/hooks/use-drag-and-drop"
+import { COLORS, COLOR_CLASSES } from "@/lib/constants"
 
 export function ColorPicker() {
-  const { handleOnDrag } = useDragAndDrop()
-
   return (
     <div className="flex justify-center gap-4 mt-4 pt-4 border-t">
       {COLORS.map((color) => (
-        <div key={color.id} className="rounded-full border-4 h-10 w-10">
+        <div key={color} className="rounded-full border-4 h-10 w-10">
           <div
-            className={`${color.class} h-full w-full rounded-full cursor-pointer grid place-items-center text-black`}
+            className={`${COLOR_CLASSES[color]} h-full w-full rounded-full cursor-pointer grid place-items-center text-black`}
             draggable
-            onDragStart={(e) => handleOnDrag(e, color)}
+            onDragStart={(e) => e.dataTransfer.setData("color", color)}
           ></div>
         </div>
       ))}

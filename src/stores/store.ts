@@ -87,13 +87,27 @@ function generateCode<T>(arr: T[], len: number): T[] {
   return code
 }
 
-function generateHints(code: string[], row: string[]): number[] {
-  const hints = row.map((color, index) => {
-    if (color === code[index]) return 2
-    if (code.includes(color)) return 1
-    return 0
+const generateHints = (code: string[], guess: string[]) => {
+  let codeSet = new Set(code)
+  let guessSet = new Set(guess)
+  const hints: number[] = []
+
+  for (let i = code.length - 1; i >= 0; i--) {
+    if (code[i] === guess[i]) {
+      hints.push(2)
+      codeSet.delete(code[i])
+      guessSet.delete(guess[i])
+    }
+  }
+
+  codeSet.forEach((color) => {
+    if (guessSet.has(color)) {
+      hints.push(1)
+      guessSet.delete(color)
+    }
   })
-  return hints.sort((a, b) => b - a)
+
+  return new Array(4).fill(0).map((_, i) => hints[i] || 0)
 }
 
 export { useStore }
